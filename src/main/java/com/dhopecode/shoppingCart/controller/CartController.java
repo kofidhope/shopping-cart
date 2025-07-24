@@ -36,6 +36,7 @@ public class CartController {
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(),null));
         }
+
     }
 
     @GetMapping("/{cartId}/cart/total-price")
