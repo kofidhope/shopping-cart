@@ -4,6 +4,7 @@ import com.dhopecode.shoppingCart.exceptions.ResourceNotFoundException;
 import com.dhopecode.shoppingCart.model.Cart;
 import com.dhopecode.shoppingCart.repository.CartItemRepository;
 import com.dhopecode.shoppingCart.repository.CartRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,7 @@ public class CartService implements iCartService{
         return cartRepository.save(cart);
     }
 
+    @Transactional
     @Override
     public void clearCart(Long id) {
         Cart cart = getCart(id);
