@@ -2,7 +2,6 @@ package com.dhopecode.shoppingCart.service.cart;
 
 import com.dhopecode.shoppingCart.exceptions.ResourceNotFoundException;
 import com.dhopecode.shoppingCart.model.Cart;
-import com.dhopecode.shoppingCart.model.CartItem;
 import com.dhopecode.shoppingCart.repository.CartItemRepository;
 import com.dhopecode.shoppingCart.repository.CartRepository;
 import lombok.RequiredArgsConstructor;
@@ -42,10 +41,11 @@ public class CartService implements iCartService{
         return cart.getTotalAmount();   
     }
 
+    @Override
     public long initialiseNewCart(){
         Cart newCart = new Cart();
         Long newCartId = cartIdGenerator.incrementAndGet();
-        newCart.setId(newCartId);
+//        newCart.setId(newCartId);
         return cartRepository.save(newCart).getId();
     }
 }
