@@ -1,5 +1,6 @@
 package com.dhopecode.shoppingCart.controller;
 
+import com.dhopecode.shoppingCart.dto.OrderDto;
 import com.dhopecode.shoppingCart.exceptions.ResourceNotFoundException;
 import com.dhopecode.shoppingCart.model.Order;
 import com.dhopecode.shoppingCart.response.ApiResponse;
@@ -34,7 +35,7 @@ public class OrderController {
     @GetMapping("/{orderId}/order")
     public ResponseEntity<ApiResponse> getOrderById(@PathVariable  Long orderId){
         try {
-            Order order = orderService.getOrder(orderId);
+            OrderDto order = orderService.getOrder(orderId);
             return ResponseEntity.ok(new ApiResponse("Item order success!", order));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity
@@ -46,7 +47,7 @@ public class OrderController {
     @GetMapping("/{userId}/order")
     public ResponseEntity<ApiResponse> getUserOrders(@PathVariable  Long userId){
         try {
-            List<Order> order = orderService.getOrder(userId);
+            List<OrderDto> order = orderService.getUserOrder(userId);
             return ResponseEntity.ok(new ApiResponse("Item order success!", order));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity

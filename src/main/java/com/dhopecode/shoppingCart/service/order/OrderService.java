@@ -1,5 +1,6 @@
 package com.dhopecode.shoppingCart.service.order;
 
+import com.dhopecode.shoppingCart.dto.OrderDto;
 import com.dhopecode.shoppingCart.enums.OrderStatus;
 import com.dhopecode.shoppingCart.exceptions.ResourceNotFoundException;
 import com.dhopecode.shoppingCart.model.*;
@@ -7,6 +8,7 @@ import com.dhopecode.shoppingCart.repository.OrderRepository;
 import com.dhopecode.shoppingCart.repository.ProductRepository;
 import com.dhopecode.shoppingCart.service.cart.CartService;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -21,6 +23,7 @@ public class OrderService implements iOrderService{
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final CartService cartService;
+    private final ModelMapper modelMapper;
 
     @Override
     public Order placeOrder(Long userId) {
@@ -67,13 +70,18 @@ public class OrderService implements iOrderService{
     }
 
     @Override
-    public Order getOrder(Long orderId) {
+    public OrderDto getOrder(Long orderId) {
         return orderRepository.findById(orderId)
+                .map(this::convertToDto)
                 .orElseThrow(()->new ResourceNotFoundException("Order not found"));
     }
 
     @Override
-    public List<Order> getUserOrder(Long UserId){
-        return orderRepository.findByUserId(UserId);
+    public List<OrderDto> getUserOrder(Long userId){
+        List<Order> orders = orderRepository.findByUserId(userId);
+        return orders.stream().map(this::convertToDto).toList();
+    }
+    private OrderDto convertToDto(Order order){
+        return modelMapper.map(order, OrderDto.class);
     }
 }
