@@ -1,9 +1,12 @@
 package com.dhopecode.shoppingCart.controller;
 
 import com.dhopecode.shoppingCart.exceptions.ResourceNotFoundException;
+import com.dhopecode.shoppingCart.model.Cart;
+import com.dhopecode.shoppingCart.model.User;
 import com.dhopecode.shoppingCart.response.ApiResponse;
 import com.dhopecode.shoppingCart.service.cart.iCartItemService;
 import com.dhopecode.shoppingCart.service.cart.iCartService;
+import com.dhopecode.shoppingCart.service.user.iUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,16 +20,17 @@ public class CartItemController {
 
     private final iCartItemService cartItemService;
     private final iCartService cartService;
+    private final iUserService userService;
 
     @PostMapping("/item/add")
-    public ResponseEntity<ApiResponse> addItemToCart(@RequestParam(required = false) Long cartId,
+    public ResponseEntity<ApiResponse> addItemToCart(
                                                      @RequestParam Long productId,
                                                      @RequestParam Integer quantity){
         try {
-            if (cartId==null){
-              cartId = cartService.initialiseNewCart();
-            }
-            cartItemService.addItemToCart(cartId, productId, quantity);
+                User user = userService.getUserById(4L);
+                Cart cart = cartService.initialiseNewCart(user);
+
+            cartItemService.addItemToCart(cart.getId(), productId, quantity);
             return ResponseEntity.ok(new ApiResponse("Add Item Success", null));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(),null));

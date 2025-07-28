@@ -15,7 +15,8 @@ import java.util.Set;
 
 @Data
 public class OrderDto {
-    private Long orderId;
+    private Long id;
+    private Long userId;
     private LocalDate orderDate;
     private BigDecimal totalAmount;
     private OrderStatus orderStatus;

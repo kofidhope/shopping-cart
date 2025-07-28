@@ -2,13 +2,16 @@ package com.dhopecode.shoppingCart.service.cart;
 
 import com.dhopecode.shoppingCart.exceptions.ResourceNotFoundException;
 import com.dhopecode.shoppingCart.model.Cart;
+import com.dhopecode.shoppingCart.model.User;
 import com.dhopecode.shoppingCart.repository.CartItemRepository;
 import com.dhopecode.shoppingCart.repository.CartRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.math.BigDecimal;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Service
@@ -44,11 +47,13 @@ public class CartService implements iCartService{
     }
 
     @Override
-    public long initialiseNewCart(){
-        Cart newCart = new Cart();
-        Long newCartId = cartIdGenerator.incrementAndGet();
-//        newCart.setId(newCartId);
-        return cartRepository.save(newCart).getId();
+    public Cart initialiseNewCart(User user){
+        return Optional.ofNullable(getCartByUserId(user.getId()))
+                .orElseGet(()->{
+                    Cart cart= new Cart();
+                    cart.setUser(user);
+                    return cartRepository.save(cart);
+                });
     }
 
     @Override
