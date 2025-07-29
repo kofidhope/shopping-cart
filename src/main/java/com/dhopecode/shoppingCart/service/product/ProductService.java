@@ -2,6 +2,7 @@ package com.dhopecode.shoppingCart.service.product;
 
 import com.dhopecode.shoppingCart.dto.ImageDto;
 import com.dhopecode.shoppingCart.dto.ProductDto;
+import com.dhopecode.shoppingCart.exceptions.AlreadyExistException;
 import com.dhopecode.shoppingCart.exceptions.ProductNotFoundException;
 import com.dhopecode.shoppingCart.exceptions.ResourceNotFoundException;
 import com.dhopecode.shoppingCart.model.Category;
@@ -34,6 +35,10 @@ public class ProductService implements IProductService {
         // if yes set it the new product category
         // if no then save it as a new category
         // then set as a new product category
+
+        if (productExist(request.getName(),request.getBrand())){
+            throw new AlreadyExistException(request.getBrand() +" "+request.getName()+ " already exist.you may update instead");
+        }
         Category category = Optional.ofNullable(categoryRepository
                         .findByName(request.getCategory().getName()))
                 .orElseGet(()->{
@@ -43,6 +48,11 @@ public class ProductService implements IProductService {
                 request.setCategory(category);
                 return productRepository.save(createProduct(request, category));
     }
+
+    private boolean productExist(String name, String brand){
+        return productRepository.existsByNameAndBrand(name,brand);
+    }
+
     private Product createProduct(AddProductRequest request, Category category){
         return new Product(
                 request.getName(),

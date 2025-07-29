@@ -1,6 +1,7 @@
 package com.dhopecode.shoppingCart.controller;
 
 import com.dhopecode.shoppingCart.dto.ProductDto;
+import com.dhopecode.shoppingCart.exceptions.AlreadyExistException;
 import com.dhopecode.shoppingCart.model.Product;
 import com.dhopecode.shoppingCart.requests.ProductUpdateRequest;
 import com.dhopecode.shoppingCart.requests.AddProductRequest;
@@ -12,8 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -46,8 +46,8 @@ public class ProductController {
             Product theProduct = productService.addProduct(product);
             ProductDto productDto = productService.convertToDto(theProduct);
             return ResponseEntity.ok(new ApiResponse("Product added successfully", productDto));
-        } catch (Exception e) {
-            return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse(e.getMessage(),null));
+        } catch (AlreadyExistException e) {
+            return ResponseEntity.status(CONFLICT).body(new ApiResponse(e.getMessage(),null));
         }
     }
 
