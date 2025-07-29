@@ -1,4 +1,4 @@
-package com.dhopecode.shoppingCart.config;
+package com.dhopecode.shoppingCart.security.config;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
