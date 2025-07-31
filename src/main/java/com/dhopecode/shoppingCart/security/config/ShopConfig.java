@@ -25,7 +25,7 @@ import java.util.List;
 @Configuration
 @RequiredArgsConstructor
 @EnableWebSecurity
-@EnableMethodSecurity(prePostEnabled = true)
+@EnableMethodSecurity(prePostEnabled = true )
 public class ShopConfig {
 
     private final ShopUserDetailsService userDetailsService;
